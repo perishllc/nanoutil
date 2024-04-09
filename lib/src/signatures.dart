@@ -54,8 +54,4 @@ class NanoSignatures {
       link,
     );
   }
-
-  static String signBlock(String hash, String privateKey) {
-    return nd.NanoSignatures.signBlock(hash, privateKey);
-  }
 }
