@@ -1,6 +1,6 @@
 name: nanoutil
 description: Tools for the NANO and BANANO cryptocurrencies including key generation, signing, encryption, and more.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/perishllc/nanoutil
 
 environment:
