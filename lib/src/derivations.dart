@@ -132,4 +132,15 @@ class NanoDerivations {
     // Ensure seed only contains hex characters, 0-9;A-F
     return NanoHelpers.isHexString(seed);
   }
+
+  static NanoDerivationType stringToType(String type) {
+    switch (type) {
+      case 'standard':
+        return NanoDerivationType.STANDARD;
+      case 'hd':
+        return NanoDerivationType.HD;
+      default:
+        throw Exception('Unknown derivation type');
+    }
+  }
 }

@@ -85,7 +85,8 @@ class NanoAmounts {
   /// @param amount 1.01
   /// @returns  101000000000000000000000000000
   ///
-  static String getAmountAsRaw(String amount, BigInt rawPerCur) {
+  static String getAmountAsRaw(String amount, BigInt? rawPerCur) {
+    rawPerCur ??= rawPerNano;
     final Decimal asDecimal = Decimal.parse(amount);
     final Decimal rawDecimal = Decimal.parse(rawPerCur.toString());
     return (asDecimal * rawDecimal).toString();
