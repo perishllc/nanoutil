@@ -2,16 +2,24 @@ import 'package:nanodart/nanodart.dart' as nd;
 
 import 'derivations.dart';
 
-
 class NanoSignatures {
+  static String signBlock(String hash, String privateKey) {
+    return nd.NanoSignatures.signBlock(hash, privateKey);
+  }
+
   static String sign(String message, String privateKey) {
-    return nd.NanoSignatures.signBlock(message, privateKey);
+    return nd.NanoHelpers.byteToHex(
+      nd.Signature.detached(
+        nd.NanoHelpers.stringToBytesUtf8(message),
+        nd.NanoHelpers.hexToBytes(privateKey),
+      ),
+    );
   }
 
   static bool verify(String message, String signature, String publicKey) {
     return nd.Signature.detachedVerify(
       nd.NanoHelpers.stringToBytesUtf8(message),
-      nd.NanoHelpers.stringToBytesUtf8(signature),
+      nd.NanoHelpers.hexToBytes(signature),
       nd.NanoHelpers.stringToBytesUtf8(publicKey),
     );
   }
