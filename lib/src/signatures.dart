@@ -7,10 +7,16 @@ class NanoSignatures {
     return nd.NanoSignatures.signBlock(hash, privateKey);
   }
 
+  static String hash(message) {
+    return nd.NanoHelpers.byteToHex(
+      nd.Blake2b.digest256([nd.NanoHelpers.stringToBytesUtf8(message)]),
+    ).toUpperCase();
+  }
+
   static String sign(String message, String privateKey) {
     return nd.NanoHelpers.byteToHex(
       nd.Signature.detached(
-        nd.NanoHelpers.stringToBytesUtf8(message),
+        nd.NanoHelpers.hexToBytes(hash(message)),
         nd.NanoHelpers.hexToBytes(privateKey),
       ),
     );
@@ -18,7 +24,7 @@ class NanoSignatures {
 
   static bool verify(String message, String signature, String publicKey) {
     return nd.Signature.detachedVerify(
-      nd.NanoHelpers.stringToBytesUtf8(message),
+      nd.NanoHelpers.hexToBytes(hash(message)),
       nd.NanoHelpers.hexToBytes(signature),
       nd.NanoHelpers.stringToBytesUtf8(publicKey),
     );
