@@ -1,4 +1,6 @@
 import 'package:nanodart/nanodart.dart' as nd;
+import 'package:nanoutil/src/blake.dart';
+import 'package:cryptography/cryptography.dart';
 
 import 'derivations.dart';
 
@@ -7,26 +9,49 @@ class NanoSignatures {
     return nd.NanoSignatures.signBlock(hash, privateKey);
   }
 
-  static String hash(message) {
+  static Future<bool> verify(
+      String message, String signature, String address) async {
+    final DartEd25519Blake blake = DartEd25519Blake();
+
+    final SimplePublicKey pubKey = SimplePublicKey(
+      nd.NanoHelpers.hexToBytes(NanoDerivations.addressToPublicKey(address)),
+      type: KeyPairType.ed25519,
+    );
+
+    bool valid = await blake.verify(
+      nd.NanoHelpers.hexToBytes(message),
+      signature: Signature(
+        nd.NanoHelpers.hexToBytes(signature),
+        publicKey: pubKey,
+      ),
+    );
+    return valid;
+  }
+
+  static String hash(String message) {
     return nd.NanoHelpers.byteToHex(
       nd.Blake2b.digest256([nd.NanoHelpers.stringToBytesUtf8(message)]),
     ).toUpperCase();
   }
 
-  static String sign(String message, String privateKey) {
-    return nd.NanoHelpers.byteToHex(
-      nd.Signature.detached(
-        nd.NanoHelpers.hexToBytes(hash(message)),
-        nd.NanoHelpers.hexToBytes(privateKey),
-      ),
+  static String signMessage(String message, String privateKey) {
+    return nd.NanoSignatures.signBlock(
+      hash(message),
+      privateKey,
     );
   }
 
-  static bool verify(String message, String signature, String publicKey) {
-    return nd.Signature.detachedVerify(
-      nd.NanoHelpers.hexToBytes(hash(message)),
-      nd.NanoHelpers.hexToBytes(signature),
-      nd.NanoHelpers.stringToBytesUtf8(publicKey),
+  static Future<bool> verifyMessage(
+    String message,
+    String signature,
+    String address,
+  ) async {
+    final String hashedMessage = hash(message);
+
+    return await verify(
+      hashedMessage,
+      signature,
+      address,
     );
   }
 
