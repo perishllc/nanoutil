@@ -1,0 +1,10 @@
+{
+  "PowVertex": {
+      "type": "vertex",
+      "file": "shaders/pow.vert"
+  },
+  "PowFragment": {
+      "type": "fragment",
+      "file": "shaders/pow.frag"
+  }
+}
